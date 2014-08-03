@@ -1,0 +1,107 @@
+#-------------------------------------------------------------------------------
+# Name:        imagesV1
+# Purpose:     To collect information about images including their ID, file name and extension, title, owner, and licence type, then write information to a CSV file
+#
+# History:     V0.5 is the basic coding
+#              V1 enhanced with GUI
+#
+# Author:      Nadja Jury
+#
+# Created:     28/07/2014
+# Copyright:   (c) Nadja Jury 2014
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
+#!/usr/bin/env python
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()
+
+
+from tkinter import * #imports everything from the library tkinter
+import tkinter.messagebox #specifically imports messagebox from tkinter
+
+class Images:
+    def __init__(self, img_id, img_filename, img_ext, img_title, img_owner, img_licence):
+        #initialising all of the variables of the data that the program will collect
+        self.img_id = img_id
+        self.img_filename = img_filename
+        self.img_ext = img_ext
+        self.img_title = img_title
+        self.img_owner = img_owner
+        self.img_licence = img_licence
+
+    def get_img_id(self):
+        #defining how the data will be collected and stored
+        return self.img_id
+
+    def get_img_filename(self):
+        return self.img_filename
+
+    def get_img_ext(self):
+        return self.img_ext
+
+    def get_img_title(self):
+        return self.img_title
+
+    def get_img_owner(self):
+        return self.img_owner
+
+    def get_img_licence(self):
+        return self.img_licence
+
+#end of indentation shows the end of the class definition
+
+class GUI:
+    def __init__(self):
+        #estabilshes new window for data entry, including the size
+        window = Tk()
+        window.title("Image Data Entry Screen")
+        window.minsize(width=400, height=500)
+
+        #creating a title for the top of the window
+        title_label = Label(window, text='Image Information', bg='black', fg='white')
+        title_label.pack()
+
+        #creating label and field variable in GUI for each entry field
+        img_id_label = Label(window, text='Enter a unique image ID:')
+        img_id_label.pack()
+        self.img_id_field = Entry(window)
+        self.img_id_field.pack()
+
+        img_filename_label = Label(window, text='Enter the file name of the image:')
+        img_filename_label.pack()
+        self.img_filename_field = Entry(window)
+        self.img_filename_field.pack()
+
+        img_ext_label = Label(window, text='Choose a file extension for the image:')
+        img_ext_label.pack()
+        self.img_id_field = StringVar()
+        OptionMenu(window, self.img_id_field, ".jpg/.jpeg", ".png", ".gif", ".btmp").pack()
+
+        img_title_label = Label(window, text='Enter the title of the image:')
+        img_title_label.pack()
+        self.img_title_field = Entry(window)
+        self.img_title_field.pack()
+
+        img_owner_label = Label(window, text='Enter the name of the owner of the image:')
+        img_owner_label.pack()
+        self.img_owner_field = Entry(window)
+        self.img_owner_field.pack()
+
+        img_licence_label = Label(window, text='Enter the licence type of the image:')
+        img_licence_label.pack()
+        self.img_licence_field = StringVar()
+        OptionMenu(window, self.img_licence_field, "Attribution (only)", "Attribution + NoDerivatives", "Attribution + ShareAlike", "Attribution + Noncommercial", "Attribution + Noncommercial + NoDerivatives", "Attribution + Noncommercial + ShareAlike").pack()
+
+        button_label = Label(window, text='Press to validate:')
+        button = Button(window, text='Submit')
+        button_label.pack()
+        button.pack()
+
+        window.mainloop()
+
+#main routine
+GUI()
