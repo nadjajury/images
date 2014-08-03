@@ -1,0 +1,68 @@
+#------------------------------------------------------------------------------
+# Name:        imagesV0.5
+# Purpose:     To collect information about images including their ID, file name and extension, title, owner, and licence type, then write information to a CSV file
+#
+# History:     V0.5 is the basic coding
+#
+# Author:      Nadja Jury
+#
+# Created:     26/07/2014
+# Copyright:   (c) Nadja Jury 2014
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
+#!/usr/bin/env python
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()
+
+
+class Images:
+    def __init__(self, ID, file_name, exten, title, owner, licence):
+        #initialising all of the variables of the data that the program will collect
+        self.ID = ID
+        self.file_name = file_name
+        self.exten = exten
+        self.title = title
+        self.owner = owner
+        self.licence = licence
+
+    def show_information(self):
+        """
+        >>> i = Images("10", "red", ".gif", "Red Paint", "Billy", "Attribution (only)")
+        >>> i.show_information()
+        ID: 10, File Name: red, Extension: .gif, Title: Red Paint, Owner: Billy, Licence: Attribution (only)
+        """
+        print("ID: {0}, File Name: {1}, Extension: {2}, Title: {3}, Owner: {4}, Licence: {5}".format(self.ID, self.file_name, self.exten, self.title, self.owner, self.licence))
+
+#end of indentation shows the end of the class definition
+
+#get_values gets the data
+def get_values():
+    global ID
+    global file_name
+    global exten
+    global title
+    global owner
+    global licence
+    ID = int(input("Enter a unique ID: "))
+    file_name = input("Enter the file name: ")
+    exten = input("Enter the file extension: ")
+    title = input("Enter the image title: ")
+    owner = input("Enter the image owner: ")
+    licence = input("Enter the creative commons licence type: ")
+
+#main routine
+if __name__== "__main__":
+    import doctest
+    doctest.testmod(verbose = False)
+    x = int(input("How many images will you be entering meta data about?"))
+    image_data = []
+    for i in range(x):
+        get_values()
+        image_data.append(Images(ID, file_name, exten, title, owner, licence))
+    for Images in image_data:
+        Images.show_information()
+
