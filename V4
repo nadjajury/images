@@ -1,0 +1,171 @@
+#-------------------------------------------------------------------------------
+# Name:        imagesV4
+# Purpose:     To collect information about images including their ID, file name and extension, title, owner, and licence type, then write information to a CSV file
+#
+# History:     V0.5 is the basic coding
+#              V1 enhanced with GUI
+#              V2 includes the write to CSV function and validation as well as new, easier-to-use variable names (e.g. ID rather than img_id)
+#              V3 enhanced with a unique primary key on the image ID
+#              V4 is the final version with all comments
+#
+# Author:      Nadja Jury
+#
+# Created:     03/08/2014
+# Copyright:   (c) Nadja Jury 2014
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
+#!/usr/bin/env python
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()
+
+import csv #imports the library needed to create CSV files
+from tkinter import * #imports everything from the library tkinter
+import tkinter.messagebox #specifically imports messagebox from tkinter
+
+class Images:
+    def __init__(self, ID, file_name, exten, title, owner, licence):
+        #initialising all of the variables of the data that the program will collect
+        self.ID = ID
+        self.file_name = file_name
+        self.exten = exten
+        self.title = title
+        self.owner = owner
+        self.licence = licence
+
+    def get_ID(self):
+        #defining how the data will be collected and stored
+        return self.ID
+
+    def get_file_name(self):
+        return self.file_name
+
+    def get_exten(self):
+        return self.exten
+
+    def get_title(self):
+        return self.title
+
+    def get_owner(self):
+        return self.owner
+
+    def get_licence(self):
+        return self.licence
+
+#end of indentation shows the end of the class definition
+
+class GUI:
+    def __init__(self):
+        #estabilshes new window for data entry, including the size
+        window = Tk()
+        window.title("Image Data Entry Screen")
+        window.minsize(width=400, height=500)
+
+        #creating a title for the top of the window
+        title_label = Label(window, text='Image Information', bg='black', fg='white')
+        title_label.pack()
+
+        #initialises the validation variables
+        self.ready_to_write = False
+        self.recordlist = []
+
+        #creating label and field variable in GUI for each entry field
+        ID_label = Label(window, text='Enter a unique image ID:')
+        ID_label.pack()
+        self.ID_field = Entry(window)
+        self.ID_field.pack()
+
+        file_name_label = Label(window, text='Enter the file name of the image:')
+        file_name_label.pack()
+        self.file_name_field = Entry(window)
+        self.file_name_field.pack()
+
+        exten_label = Label(window, text='Choose a file extension for the image:')
+        exten_label.pack()
+        self.exten_field = StringVar()
+        OptionMenu(window, self.exten_field, ".jpg", ".jpeg", ".png", ".gif", ".btmp").pack()
+
+        title_label = Label(window, text='Enter the title of the image:')
+        title_label.pack()
+        self.title_field = Entry(window)
+        self.title_field.pack()
+
+        owner_label = Label(window, text='Enter the name of the owner of the image:')
+        owner_label.pack()
+        self.owner_field = Entry(window)
+        self.owner_field.pack()
+
+        licence_label = Label(window, text='Enter the creative commons licence type of the image:')
+        licence_label.pack()
+        self.licence_field = StringVar()
+        OptionMenu(window, self.licence_field, "Attribution (only)", "Attribution + NoDerivatives", "Attribution + ShareAlike", "Attribution + Noncommercial", "Attribution + Noncommercial + NoDerivatives", "Attribution + Noncommercial + ShareAlike").pack()
+
+        button_label = Label(window, text='Press to validate:')
+        button = Button(window, text='Submit', command=self.doSubmit)
+        button_label.pack()
+        button.pack()
+
+        button_label1 = Label(window, text='Convert Record to csv')
+        button1 = Button(window, text='Write To CSV', command=self.writetocsv)
+        button_label1.pack()
+        button1.pack()
+
+        window.mainloop() #infinitely waiting
+
+    def doSubmit(self):
+        #this is what happens when the 'submit' button is clicked
+
+        noduplicate = True;
+        for record in self.recordlist:
+            if self.ID_field.get() == record.get_ID():
+                noduplicate = False;
+                tkinter.messagebox.showwarning('Warning!','Duplicate Image ID');
+                print('Please enter a unique ID');
+                self.ID_field.delete(0, END)
+
+        if noduplicate == True:
+            if len(self.ID_field.get()) <1 or len(self.file_name_field.get()) <1 or len(self.exten_field.get()) <1 or len(self.title_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.licence_field.get()) <1:
+                tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
+            else:
+                try:
+                    validated_ID_field = int(self.ID_field.get()) or self.ID_field.get() <1
+
+                    self.recordlist.append(Images(self.ID_field.get(), self.file_name_field.get(), self.exten_field.get(), self.title_field.get(), self.owner_field.get(), self.licence_field.get()))
+
+                    self.ready_to_write= True
+                    tkinter.messagebox.showinfo('Notice','Submission Sucessful')
+
+
+                    self.ID_field.delete(0, END) #command to clear field
+                    self.file_name_field.delete(0, END)
+                    self.title_field.delete(0, END)
+                    #I only cleared these three as I thought if a user is entering information about a lot of images at once, there is a high chance the extension/owner/licence will be the same throughout the images therefore did not clear those three fields
+                except:
+                    tkinter.messagebox.showwarning('Warning!','Please enter a number (1 or above) for the image ID')
+                    print('Please enter a number for the ID')
+
+
+    def writetocsv(self):
+        #this is what happens when the 'write to CSV' button is clicked
+        import csv
+        file_name = 'imagesdatabase.txt'
+
+        if self.ready_to_write: #checks that the data has been validated
+            ofile = open(file_name, 'w') #'w' means that the primary key will always be unique as all the data has to be validated before the csv file is written
+            writer = csv.writer(ofile, delimiter=',')
+            for record in self.recordlist:
+                print(record.get_ID())
+                writer.writerow([record.get_ID(),record.get_file_name(), record.get_exten(),record.get_title(), record.get_owner(),record.get_licence()])
+            ofile.close()
+        else:
+            tkinter.messagebox.showwarning('Error!', 'You need to validate (submit) your data') #warning appears if user tries to write without submitting their data first
+
+        self.ready_to_write= False
+        tkinter.messagebox.showinfo('Notice',file_name+' File Generated Sucessfully')
+
+
+#main routine
+GUI()
